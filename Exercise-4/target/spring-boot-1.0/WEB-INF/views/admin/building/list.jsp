@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp"%>
 <c:url var="buildingListUrl" value ="/admin/building-list"/>
+<c:url var="buildingAPI" value ="/api/building"/>
 <html style="font-family: inherit !important;">
 <head>
 
@@ -356,7 +357,7 @@
                   ADD
                 </button>
               </a>
-              <button class="btn btn-white btn-warning btn-bold">
+              <button class="btn btn-white btn-warning btn-bold" id="btnDeleteBuilding">
                 <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
                 Delete
               </button>
@@ -366,10 +367,7 @@
               <thead>
               <tr>
                 <th class="center">
-                  <label class="pos-rel">
-                    <input type="checkbox" class="ace">
-                    <span class="lbl"></span>
-                  </label>
+                  Chọn tòa nhà
                 </th>
                 <th>Tên tòa nhà</th>
                 <th>Địa chỉ</th>
@@ -389,10 +387,10 @@
 
               <tbody>
               <c:forEach var="item" items="${buildingList}">
-              <tr>
+              <tr >
                 <td class="center">
                   <label class="pos-rel">
-                    <input type="checkbox" class="ace" value="">
+                    <input type="checkbox" class="ace" value="${item.id}">
                     <span class="lbl"></span>
                   </label>
                 </td>
@@ -421,7 +419,7 @@
                     </a>
 
                     <a>
-                    <button class="btn btn-xs btn-danger" title="Xóa tòa nhà" onclick="deleteBuilding(${item.id})" id="btnDeleteBuilding">
+                    <button class="btn btn-xs btn-danger" title="Xóa tòa nhà" onclick="deleteBuilding(${item.id})">
                       <i class="ace-icon fa fa-trash-o bigger-120"></i>
                     </button>
                     </a>
@@ -498,24 +496,7 @@
 
           </thead>
           <tbody>
-          <tr class="center">
-            <td><input type="checkbox" name id="checkBox1"
-                       value="1" checked></td>
-            <td>Doe</td>
-          </tr>
-          <tr class="center">
-            <td><input type="checkbox" name id="checkBox2"
-                       value="2"></td>
-            <td>Doe</td>
 
-          </tr>
-          <tr class="center">
-
-            <td><input type="checkbox" name id="checkBox3"
-                       value="3"></td>
-            <td>Biden</td>
-
-          </tr>
           </tbody>
         </table>
         <input type="hidden" name="Building" id="buildingId">
@@ -533,18 +514,74 @@
 <script>
   function assignmentBuilding(buildingId){
     $('#buildingModal').modal();
+    loadStaff(buildingId);
+    $('#buildingId').val();
   }
-  function deleteBuilding(buildingId){
-    let buildingId = [buildingId];
-    ${'builingId'}.val();
+  function deleteBuilding(data){
+    let buildingId = [data];
+    deleteBuildings(buildingId);
   }
-  $('#btnDeleteBuilding').click(function(e){
+  $('#btnDeleteBuilding').click(e=>{
     e.preventDefault();
-
+    let buildingIds = $('#tableList').find('tbody input[type=checkbox]:checked').map(function() {
+      return $(this).val();
+    }).get();
+    deleteBuildings(buildingIds);
   })
+  function deleteBuildings(data){
+    $.ajax(
+                    {
+                      type:"DELETE",
+                      url:"${buildingAPI}"+data,
+                      data : JSON.stringify(data),
+                      contentType:"application/json",
+                      dataType:"JSON",
+                      success: function(respond){
+                        console.log("Success");
+
+                      },
+                      error: function(respond){
+                        console.log("Failed");
+                        console.log(respond )
+                      }
+                    }
+            )
+  }
 </script>
 
 <script>
+
+    function loadStaff(buildingId){
+         $.ajax(
+                    {
+                      type:"GET",
+                      url: "${buildingAPI}/" + buildingId + "/staffs",
+
+                      dataType:"JSON",
+                      // contentType:"application/json",
+                      // data : JSON.stringify(data),
+                      success: function(response){
+                        let row ="";
+                        $.each(response.data, function (index, item) {
+                              row += '<tr class="center">';
+                              row += '<td><input type="checkbox" id="checkBox' + item.staffId + '" value="' + item.staffId + '" class ="check-box-element"' + item.checked + '></td>';
+                              row += '<td>' + item.fullName + '</td>';
+                              row += '</tr>';
+                          });
+                        $('#staffList tbody').html(row);
+                        console.info("Success");
+
+                      },
+                      error: function(response){
+                        console.log("Failed");
+                        window.location.href ="<c:url value="/admin/building-list?message=erorr" />";
+                        console.log(response )
+                      }
+                    }
+            )
+    }
+
+
   $('#btn-assignment-building').click(e=>{
     e.preventDefault();
     let data = [];
@@ -555,6 +592,7 @@
     console.log(staffs);
     data['staffs'] = staffs;
   })
+
 </script>
 
 <%--<script>--%>

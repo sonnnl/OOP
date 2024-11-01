@@ -510,8 +510,18 @@
               }
             })
             data['typeCode'] = typeCode;
-            console.log(data);
-            $.ajax(
+            if(typeCode!=""){
+              addOrUpdateBuilding(data);
+            }else{
+                window.location.href = "<c:url value='/admin/building-edit?typeCode=require' />";
+            }
+
+          }
+
+
+  )
+  function addOrUpdateBuilding(data){
+  $.ajax(
                     {
                       type:"POST",
                       url:"${buildingAPI}",
@@ -528,10 +538,7 @@
                       }
                     }
             )
-          }
-
-
-  )
+  }
   $('#btnCancelBuilding').click(function (e){
   e.preventDefault();
   window.location.href ="/admin/building-list";
