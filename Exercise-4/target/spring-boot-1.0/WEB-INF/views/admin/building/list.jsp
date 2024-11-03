@@ -499,7 +499,7 @@
 
           </tbody>
         </table>
-        <input type="hidden" name="Building" id="buildingId">
+        <input type="hidden" name="Building" id="buildingId" >
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary"
@@ -512,10 +512,11 @@
 </div>
 </div>
 <script>
+  //gan buildingid cho hidden input
   function assignmentBuilding(buildingId){
     $('#buildingModal').modal();
     loadStaff(buildingId);
-    $('#buildingId').val();
+    $('#buildingId').val(buildingId);
   }
   function deleteBuilding(data){
     let buildingId = [data];
@@ -561,6 +562,7 @@
                       // contentType:"application/json",
                       // data : JSON.stringify(data),
                       success: function(response){
+                        console.log(response);
                         let row ="";
                         $.each(response.data, function (index, item) {
                               row += '<tr class="center">';
@@ -584,14 +586,39 @@
 
   $('#btn-assignment-building').click(e=>{
     e.preventDefault();
-    let data = [];
+    let data = {};
     data['buildingId'] = $('#buildingId').val();
     let staffs = $('#staffList').find('tbody input[type=checkbox]:checked').map(function() {
       return $(this).val();
     }).get();
     console.log(staffs);
     data['staffs'] = staffs;
+    if(data['staffs']!=""){
+        assignment(data);
+    }
   })
+  function assignment(data){
+         $.ajax(
+                    {
+                      type:"POST",
+                      url: "${buildingAPI}/" + "/asignment",
+
+                      dataType:"JSON",
+                      contentType:"application/json",
+                      data : JSON.stringify(data),
+                      success: function(response){
+                        console.log(response);
+                        console.info("Success");
+
+                      },
+                      error: function(response){
+                        console.log("Failed");
+                        window.location.href ="<c:url value="/admin/building-list?message=erorr" />";
+                        console.log(response )
+                      }
+                    }
+            )
+    }
 
 </script>
 

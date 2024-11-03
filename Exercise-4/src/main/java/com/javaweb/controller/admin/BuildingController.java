@@ -7,6 +7,7 @@ import com.javaweb.enums.districtCode;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
+import com.javaweb.service.BuildingService;
 import com.javaweb.service.IUserService;
 import com.javaweb.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,42 +27,32 @@ import java.util.List;
 public class BuildingController {
     @Autowired
     private IUserService userService;
+    @Autowired
+    private BuildingService buildingService;
     @GetMapping(value = "/admin/building-list")
     public ModelAndView buildingList(@ModelAttribute BuildingSearchRequest buildingSearchRequest, HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("admin/building/list");
         mav.addObject("modelSearch",buildingSearchRequest);
 //        Lấy dữ liệu ở DB
-        List<BuildingSearchResponse> responseList = new ArrayList<>();
+
+        List<BuildingSearchResponse> responseList = buildingService.findAll(buildingSearchRequest);
+
         BuildingSearchResponse item1 = new BuildingSearchResponse();
         item1.setId(1L);
-        item1.setName("Tran Thai Son");
-        item1.setAddress("Lao Vn");
-        item1.setFloorArea(222L);
-        item1.setManagerName("Messi");
-        item1.setBrokerageFee(2.4);
-        item1.setEmptyArea("123m2");
-        item1.setManagerPhone("0705946867");
-        item1.setNumberOfBasement(4L);
-        item1.setServiceFee("2");
-        item1.setRentArea("222 m2");
-        item1.setRentPrice(222L);
-        responseList.add(item1);
-
-        // Item 2
-        BuildingSearchResponse item2 = new BuildingSearchResponse();
-        item2.setId(2L);
-        item2.setName("Twin Tower");
-        item2.setAddress("United State of Lao");
-        item2.setFloorArea(350L);  // Unique value
-        item2.setManagerName("Tran Thai Son");  // Unique value
-        item2.setBrokerageFee(1.9);  // Unique value
-        item2.setEmptyArea("300m2");  // Unique value
-        item2.setManagerPhone("123456789");  // Unique value
-        item2.setNumberOfBasement(6L);  // Unique value
-        item2.setServiceFee("3");
-        item2.setRentArea("350 m2");
-        item2.setRentPrice(300L);  // Unique value
-        responseList.add(item2);
+        item1.setName("Không tìm thấy tòa nhà nào");
+        item1.setAddress("");
+        item1.setFloorArea(0L);
+        item1.setManagerName("");
+        item1.setBrokerageFee(0.0);
+        item1.setEmptyArea("");
+        item1.setManagerPhone("");
+        item1.setNumberOfBasement(0L);
+        item1.setServiceFee("");
+        item1.setRentArea("");
+        item1.setRentPrice(0L);
+        if(responseList.size()==0){
+            responseList.add(item1);
+        }
 
         // Add list to ModelAndView
         mav.addObject("buildingList", responseList);

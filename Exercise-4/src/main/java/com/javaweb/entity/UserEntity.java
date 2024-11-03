@@ -29,14 +29,6 @@ public class UserEntity extends BaseEntity {
     @Column(name = "email", unique = true)
     private String email;
 
-    public List<BuildingEntity> getBuildingEntityList() {
-        return buildingEntityList;
-    }
-
-    public void setBuildingEntityList(List<BuildingEntity> buildingEntityList) {
-        this.buildingEntityList = buildingEntityList;
-    }
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", nullable = false),
@@ -106,7 +98,7 @@ public class UserEntity extends BaseEntity {
     }
         @Override
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     @Override

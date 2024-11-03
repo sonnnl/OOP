@@ -257,7 +257,6 @@
                                     placeholder="Direction: "
                                     class="form-control"
                                     name="direction"  value=""/>
-
                           </div>
                           <div
                                   class="col-xs-3">
@@ -528,13 +527,13 @@
                       data : JSON.stringify(data),
                       contentType:"application/json",
                       dataType:"JSON",
-                      success: function(respond){
+                      success: function(response){
                         console.log("Success");
 
                       },
-                      error: function(respond){
+                      error: function(response){
                         console.log("Failed");
-                        console.log(respond )
+                        console.log(response )
                       }
                     }
             )

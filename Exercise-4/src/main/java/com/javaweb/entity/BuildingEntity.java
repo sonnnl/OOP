@@ -1,5 +1,7 @@
 package com.javaweb.entity;
 
+import com.javaweb.enums.districtCode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +15,26 @@ public class BuildingEntity extends BaseEntity{
     private String street;
     @Column(name="ward")
     private String ward;
-    @Column(name="district")
-    private String districtCode;
+    @Column(name = "district")
+    @Enumerated(EnumType.STRING)
+    private districtCode district;
     @Column(name="managername")
     private String nameManager;
     @Column(name="managerphone")
     private String managerPhone;
     @Column(name="floorarea")
     private Integer floorArea;
+    @Column(name="numberofbasement")
+    private Long numberofBasement;
+
+    public Long getNumberofBasement() {
+        return numberofBasement;
+    }
+
+    public void setNumberofBasement(Long numberofBasement) {
+        this.numberofBasement = numberofBasement;
+    }
+
     @Column(name="rentprice")
     private Integer rentPrice;
     @Column(name="servicefee")
@@ -46,6 +60,16 @@ public class BuildingEntity extends BaseEntity{
     )
     private List<UserEntity> userEntities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "building",fetch = FetchType.LAZY)
+    private List<RentAreaEntity> listRentArea = new ArrayList<>();
+
+    public List<RentAreaEntity> getListRentArea() {
+        return listRentArea;
+    }
+
+    public void setListRentArea(List<RentAreaEntity> listRentArea) {
+        this.listRentArea = listRentArea;
+    }
 
     public String getName() {
         return name;
@@ -63,12 +87,12 @@ public class BuildingEntity extends BaseEntity{
         return ward;
     }
 
-    public String getDistrictCode() {
-        return districtCode;
+    public districtCode getDistrict() {
+        return district;
     }
 
-    public void setDistrictCode(String districtCode) {
-        this.districtCode = districtCode;
+    public void setDistrict(districtCode district) {
+        this.district = district;
     }
 
     public String getTypeCode() {

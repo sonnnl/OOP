@@ -8,14 +8,14 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
-public class SpringBootWebApplication extends SpringBootServletInitializer {
+public class Main extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(SpringBootWebApplication.class);
+        return application.sources(Main.class);
     }
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(SpringBootWebApplication.class, args);
+        SpringApplication.run(Main.class, args);
     }
 }

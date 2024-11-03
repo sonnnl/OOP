@@ -14,7 +14,7 @@ public class StaffResponseDTO {
         this.fullName = fullName;
     }
 
-    public Long getStaffId(Long id) {
+    public Long getStaffId() {
         return staffId;
     }
 
